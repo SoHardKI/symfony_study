@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Services\GiftsService;
-use http\Env\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
@@ -20,10 +22,19 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="default")
      */
-    public function index(GiftsService $giftsService)
+    public function index(GiftsService $giftsService, Request $request, SessionInterface $session)
     {
 //        $users = ['Anton', 'dasdsada', 'adsadad'];
         $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+//        $session->set('name', 'session value');
+//        $session->remove('name');
+//        if($session->has('name')) {
+//            exit($session->get('name'));
+//        }
+//        exit($request->query->get('page', 'default'));
+        $request->isXmlHttpRequest(); // Check ajax query
+        $request->request->get('post_name'); // Check post
+//        exit($request->cookies->get('PHPSESSID'));
 //        $user = new User;
 //        $user->setName('Adam');
 //        $user2 = new User;
@@ -37,7 +48,20 @@ class DefaultController extends AbstractController
 //        $entitymanager->persist($user3);
 //        $entitymanager->persist($user4);
 //        $entitymanager->flush();
-
+//        $this->addFlash('notice','my notice');
+//        $this->addFlash('warning','my warning');
+//        $cookie = new Cookie(
+//            'my_cookie',
+//            'cookie_value',
+//            time() + (2 * 365 * 24 * 60 * 60)
+//        );
+//
+//        $res = new Response();
+//        $res->headers->setCookie($cookie);
+//        $res->send();
+        $res = new Response();
+        $res->headers->clearCookie('my_cookie');
+        $res->send();
 
         return $this->render('default/index.html.twig', [
             'users' => $users,
