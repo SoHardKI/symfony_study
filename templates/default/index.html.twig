@@ -46,5 +46,12 @@
                 </div>
             {% endfor %}
         {% endfor %}
+        {{ path('home') }}
+        {{ url('home') }}
+        {{ ga_code }}
+        {{ render(controller(
+            'App\\Controller\\DefaultController::mostPopular',
+            {'number' : 4}
+        )) }}
     </div>
 {% endblock %}

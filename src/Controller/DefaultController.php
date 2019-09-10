@@ -11,12 +11,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class DefaultController extends AbstractController
 {
     public function __construct(LoggerInterface $logger)
     {
-        $logger->info('123');
+//        $logger->info('123');
+//        var_dump($logger);
     }
 
     /**
@@ -104,5 +106,76 @@ class DefaultController extends AbstractController
     public function index4()
     {
         return new Response('answer');
+    }
+
+    /**
+     * @Route("/generate-url/{param?}", name="generate_url")
+     */
+    public function generate_url()
+    {
+        exit($this->generateUrl(
+            'generate_url',
+            array('param' => 10),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ));
+    }
+
+    /**
+     * @Route("/download", name="download")
+     */
+    public function download()
+    {
+        $path = $this->getParameter('download_directory');
+//        return $this->file($path,'file_name.pdf');
+    }
+
+    /**
+     * @Route("/redirections")
+     */
+    public function redirections()
+    {
+        return $this->redirectToRoute('redirect_to_route', array('param' => 10));
+    }
+
+    /**
+     * @Route("/red", name="redirect_to_route")
+     */
+    public function red()
+    {
+        exit('test');
+    }
+
+    /**
+     * @Route("/forward")
+     */
+    public function forwarding()
+    {
+        $response = $this->forward(
+            'App\Controller\DefaultController::forwarding',
+            array('param' => '1')
+        );
+        return $response;
+    }
+
+    /**
+     * @Route("/method-to-forward/{param?}", name="route_to_forward")
+     */
+    public function methodToForward($param)
+    {
+        exit('test controller forwarding - ' . $param);
+    }
+
+    /**
+     * @Route("/home", name="home")
+     */
+    public function home()
+    {
+        exit('123');
+    }
+
+    public function mostPopular($number = 3)
+    {
+        $post =  ['Anton', 'dasdsada', 'adsadad'];
+        return $this->render('default/most_popular.html.twig', ['posts' => $post]);
     }
 }
