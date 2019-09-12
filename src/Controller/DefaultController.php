@@ -22,7 +22,97 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/", name="default")
+     * @Route("/", name="index101")
+     */
+    public function index101(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $conn = $entityManager->getConnection();
+        $sql = 'SELECT * FROM user u WHERE u.id > :id';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => 3]);
+        var_dump($stmt->fetchAll());
+
+        return $this->render('default/index.html.twig',
+            [
+                'controller_name' => 'default'
+            ]);
+    }
+
+    /**
+     * @Route("/index100", name="index100")
+     */
+    public function index100(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $id = 2;
+        $user = $entityManager->getRepository(User::class)->find($id);
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->render('default/index.html.twig',
+            [
+                'controller_name' => 'default'
+            ]);
+    }
+
+    /**
+     * @Route("/index11", name="index11")
+     */
+    public function index11(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $id = 1;
+        $user = $entityManager->getRepository(User::class)->find($id);
+        $user->setName('test');
+        var_dump($user);
+        $entityManager->persist($user);
+        $entityManager->flush();
+        var_dump($user);
+
+        return $this->render('default/index.html.twig',
+            [
+                'controller_name' => 'default'
+            ]);
+    }
+
+    /**
+     * @Route("/index10", name="index")
+     */
+    public function index10()
+    {
+        $repository = $this->getDoctrine()->getRepository(User::class);
+//        $user = $repository->find(1);
+//        $user = $repository->findOneBy(['name' => 'Robert']);
+//        $user = $repository->findBy(['name' => 'Robert'],['id' => 'DESC']);
+//        $user = $repository->findAll();
+//        var_dump($user);
+
+        return $this->render('default/index.html.twig',
+            [
+                'controller_name' => 'default'
+            ]);
+    }
+
+    /**
+     * @Route("/test", name="test")
+     */
+    public function newIndex()
+    {
+        $entity_manager = $this->getDoctrine()->getManager();
+        $user = new User();
+        $user->setName('Robert');
+        $entity_manager->persist($user);
+        $entity_manager->flush();
+
+        return $this->render('default/index.html.twig',
+            [
+                'controller_name' => 'default'
+            ]);
+    }
+
+    /**
+     * @Route("/default", name="default")
      */
     public function index(GiftsService $giftsService, Request $request, SessionInterface $session)
     {
@@ -175,7 +265,7 @@ class DefaultController extends AbstractController
 
     public function mostPopular($number = 3)
     {
-        $post =  ['Anton', 'dasdsada', 'adsadad'];
+        $post = ['Anton', 'dasdsada', 'adsadad'];
         return $this->render('default/most_popular.html.twig', ['posts' => $post]);
     }
 }
