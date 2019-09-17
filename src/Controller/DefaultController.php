@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Video;
 use App\Services\GiftsService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +23,54 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/", name="index101")
+     * @Route("/", name="index111")
+     */
+    public function index111()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        return $this->render('default/index.html.twig',
+            [
+                'controller_name' => 'default'
+            ]);
+    }
+
+    /**
+     * @Route("/index110", name="index110")
+     */
+    public function index110()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+//        $user = new User();
+//        $user->setName("Robert");
+//        for ($i = 1; $i <= 3; ++$i) {
+//            $video = new Video();
+//            $video->setTitle('Video title -' . $i);
+//            $user->addVideo($video);
+//            $entityManager->persist($video);
+//        }
+//        $entityManager->persist($user);
+//        $entityManager->flush();
+
+
+//        $video = $this->getDoctrine()->getRepository(Video::class)->find(1);
+//        $user = $video->getUser()->getName();
+//        var_dump($user);
+        $user = $this->getDoctrine()->getRepository(User::class)
+            ->find(1);
+        foreach ($user->getVideos() as $video) {
+            var_dump($video->getTitle());
+        }
+
+        return $this->render('default/index.html.twig',
+            [
+                'controller_name' => 'default'
+            ]);
+    }
+
+    /**
+     * @Route("/index101", name="index101")
      */
     public function index101(Request $request)
     {
